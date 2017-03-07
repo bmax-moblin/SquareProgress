@@ -1,5 +1,5 @@
 ### Description
-Square Progress is a square-shaped widget, that shows a cyclic animation without an indication of progress.
+Square Progress is a square-shaped widget, that shows a cyclic animation to indicate some work in progress.
 
 <img src="https://github.com/bmax-moblin/SquareProgress/blob/master/demo.gif">
 ### Usage
