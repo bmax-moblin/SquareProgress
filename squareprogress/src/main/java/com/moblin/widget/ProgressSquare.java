@@ -17,6 +17,8 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 
 /**
  * Shows a cyclic animation without an indication of progress.
+ * Custom attribute:
+ * color - square shape's color
  */
 public class ProgressSquare extends View implements Animator.AnimatorListener {
     private static final int TOTAL_STEPS = 8;
