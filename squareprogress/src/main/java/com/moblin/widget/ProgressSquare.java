@@ -9,8 +9,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.Point;
 import android.graphics.RectF;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -26,6 +26,8 @@ public class ProgressSquare extends View implements Animator.AnimatorListener {
     private Paint mPaint = new Paint();
     private RectF mBounds = new RectF();
     private Path mPath = new Path();
+    private Point mPivot = new Point();
+    private float mRotation;
     private int mDefaultSize, mStepNum, mPadding, mColor,
             mAnimationDuration, mStartDelay, mStrokeWidth;
 
@@ -34,7 +36,7 @@ public class ProgressSquare extends View implements Animator.AnimatorListener {
      * This is called when a view is being constructed from an XML file,
      * supplying attributes that were specified in the XML file.
      */
-    public ProgressSquare(Context context, @Nullable AttributeSet attrs) {
+    public ProgressSquare(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(attrs, getResources());
     }
@@ -54,6 +56,8 @@ public class ProgressSquare extends View implements Animator.AnimatorListener {
         int size = Math.min(w, h);
         // Bound drawing to a square and account for the padding.
         setupBounds(w, h, size);
+        // Set the rotation pivot to center.
+        mPivot.set(size / 2, size / 2);
         // Travel distance excludes the padding on both sides.
         setupAnimator(size - mPadding * 2f);
         // After everything is set, it's safe to start drawing.
@@ -115,7 +119,10 @@ public class ProgressSquare extends View implements Animator.AnimatorListener {
                 break;
             default:
         }
+        canvas.save();
+        canvas.rotate(mRotation, mPivot.x, mPivot.y);
         canvas.drawPath(mPath, mPaint);
+        canvas.restore();
         // Ask for the next frame.
         invalidate();
     }
@@ -147,6 +154,10 @@ public class ProgressSquare extends View implements Animator.AnimatorListener {
     public void onAnimationRepeat(Animator animation) {
         // Increment the step and rotate if needed.
         mStepNum = (mStepNum + 1) % TOTAL_STEPS;
+        // Change canvas rotation after half cycle to break the routine.
+        if (mStepNum == 4) {
+            mRotation = (mRotation + 90f) % 360f;
+        }
     }
 
     /** Private methods */
